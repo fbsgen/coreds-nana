@@ -1,9 +1,8 @@
 #pragma once
 
 #include <coreds/pstore.h>
-#include "ui.h"
+#include "../ui.h"
 
-namespace coreds {
 namespace ui {
 
 template <typename T, typename F, typename W>
@@ -196,5 +195,4 @@ public:
     }
 };
 
-} // coreds
 } // ui
