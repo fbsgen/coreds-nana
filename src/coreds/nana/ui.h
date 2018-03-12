@@ -3,6 +3,7 @@
 #include <vector>
 #include <forward_list>
 #include <nana/gui/wvl.hpp>
+#include <nana/gui/widgets/label.hpp>
 #include <nana/gui/widgets/panel.hpp>
 #include <nana/gui/widgets/picture.hpp>
 
