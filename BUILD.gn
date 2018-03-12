@@ -4,7 +4,8 @@ config("coreds_config") {
 
 source_set("coreds") {
   sources = [
-    "src/coreds/ui/pager.h", # depends on nana
+    "src/coreds/nana/ui.h", # depends on nana
+    "src/coreds/nana/pager.h", # depends on nana
   ]
   public_configs = [ ":coreds_config" ]
 }
