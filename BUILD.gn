@@ -1,0 +1,11 @@
+config("coreds_config") {
+  include_dirs = [ "src" ]
+}
+
+source_set("coreds") {
+  sources = [
+    "src/coreds/ui/pager.h", # depends on nana
+  ]
+  public_configs = [ ":coreds_config" ]
+}
+
