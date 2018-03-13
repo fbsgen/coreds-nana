@@ -138,9 +138,12 @@ struct SubForm : nana::form
         bgcolor(nana::color_rgb(bg));
         events().unload([this](const nana::arg_unload& arg) {
             arg.cancel = true;
-            hide();
             if (this->modal)
+            {
                 nana::API::window_enabled(*root, true);
+                root->focus();
+            }
+            hide();
         });
     }
     
