@@ -243,10 +243,10 @@ struct ToggleIcon : Panel
     Icon on_;
     Icon off_;
     
-    ToggleIcon(nana::widget& owner, nana::paint::image icon_on, nana::paint::image icon_off):
+    ToggleIcon(nana::widget& owner, nana::paint::image icon_on, nana::paint::image icon_off, bool cursor_hand = true):
         Panel(owner, "<on_><off_>"),
-        on_(*this, icon_on, true),
-        off_(*this, icon_off, true)
+        on_(*this, icon_on, cursor_hand),
+        off_(*this, icon_off, cursor_hand)
     {
         place["on_"] << on_;
         place["off_"] << off_;
@@ -267,10 +267,10 @@ struct DeferredToggleIcon : DeferredPanel
     DeferredIcon on_;
     DeferredIcon off_;
     
-    DeferredToggleIcon(nana::paint::image icon_on, nana::paint::image icon_off):
+    DeferredToggleIcon(nana::paint::image icon_on, nana::paint::image icon_off, bool cursor_hand = true):
         DeferredPanel("<on_><off_>"),
-        on_(icon_on, true),
-        off_(icon_off, true)
+        on_(icon_on, cursor_hand),
+        off_(icon_off, cursor_hand)
     {
         
     }
