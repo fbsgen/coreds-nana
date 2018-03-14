@@ -187,6 +187,27 @@ struct Icon : nana::picture
     }
 };
 
+struct DeferredIcon : nana::picture
+{
+    DeferredIcon(nana::paint::image icon, bool cursor_hand = false) : nana::picture()
+    {
+        load(icon);
+        //transparent(true);
+        
+        if (!cursor_hand)
+            return;
+        
+        events().mouse_move([this](const nana::arg_mouse& arg) {
+            cursor(nana::cursor::hand);
+        });
+    }
+protected:
+    void _m_complete_creation() override
+    {
+        transparent(true);
+    }
+};
+
 struct Panel : nana::panel<false>
 {
     nana::place place{ *this };
@@ -194,6 +215,26 @@ struct Panel : nana::panel<false>
     Panel(nana::widget& owner, const char* layout) : nana::panel<false>(owner)
     {
         place.div(layout);
+    }
+};
+
+struct DeferredPanel : nana::panel<false>
+{
+    const char* const layout;
+    nana::place place;
+    
+    DeferredPanel(const char* layout) : nana::panel<false>(), layout(layout)
+    {
+        
+    }
+    
+protected:
+    void _m_complete_creation() override
+    {
+        place.bind(*this);
+        place.div(layout);
+        
+        //transparent(true);
     }
 };
 
@@ -212,8 +253,24 @@ struct ToggleIcon : Panel
         place.collocate();
         place.field_display("off_", false);
     }
-    ToggleIcon(nana::widget& owner, const char* icon_on, const char* icon_off):
-        ToggleIcon(owner, nana::paint::image(icon_on), nana::paint::image(icon_off))
+    
+    void update(bool on)
+    {
+        place.field_display("on_", on);
+        place.field_display("off_", !on);
+        place.collocate();
+    }
+};
+
+struct DeferredToggleIcon : DeferredPanel
+{
+    DeferredIcon on_;
+    DeferredIcon off_;
+    
+    DeferredToggleIcon(nana::paint::image icon_on, nana::paint::image icon_off):
+        DeferredPanel("<on_><off_>"),
+        on_(icon_on, true),
+        off_(icon_off, true)
     {
         
     }
@@ -224,25 +281,19 @@ struct ToggleIcon : Panel
         place.field_display("off_", !on);
         place.collocate();
     }
-};
-
-struct DeferredPanel : nana::panel<false>
-{
-    const char* const layout;
-    nana::place place;
-    
-    DeferredPanel(const char* layout) : nana::panel<false>(), layout(layout)
-    {
-        
-    }
-    
-private:
+protected:
     void _m_complete_creation() override
     {
-        place.bind(*this);
-        place.div(layout);
+        DeferredPanel::_m_complete_creation();
         
-        //transparent(true);
+        on_.create(*this);
+        off_.create(*this);
+        
+        place["on_"] << on_;
+        place["off_"] << off_;
+        
+        place.collocate();
+        place.field_display("off_", false);
     }
 };
 
