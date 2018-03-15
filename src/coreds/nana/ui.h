@@ -329,8 +329,8 @@ struct MsgPanel : BgPanel
     nana::label close_{ *this, "<bold target=\"0\"> x </>" };
     
     MsgPanel(nana::widget& owner, const MsgColors& colors) : BgPanel(owner,
-        "margin=[3,2,1,3]"
-        "<msg_>"
+        "margin=[1,2,1,3]"
+        "<msg_ margin=[1,0,0,0]>"
         "<close_ weight=20>"
     ),  colors(colors)
     {
