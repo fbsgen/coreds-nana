@@ -78,6 +78,34 @@ inline void border_top(nana::paint::graphics& graph, nana::color color)
     graph.line_to({ static_cast<int>(graph.width()), 0 }, color);
 }
 
+inline void border_bottom(nana::paint::graphics& graph, nana::color color)
+{
+    auto y = static_cast<int>(graph.height()) - 1;
+    graph.line_begin(0, y);
+    graph.line_to({ static_cast<int>(graph.width()), y }, color);
+}
+
+inline void border_left(nana::paint::graphics& graph, nana::color color)
+{
+    graph.line_begin(0, 0);
+    graph.line_to({ 0, static_cast<int>(graph.height()) - 1 }, color);
+}
+
+inline void border_right(nana::paint::graphics& graph, nana::color color)
+{
+    auto x = static_cast<int>(graph.width()) - 1;
+    graph.line_begin(x, 0);
+    graph.line_to({ x, static_cast<int>(graph.height()) - 1 }, color);
+}
+
+/*inline void draw_border_top(nana::window w, nana::color color)
+{
+    nana::drawing dw(w);
+    dw.draw([color](nana::paint::graphics& graph) {
+        border_top(graph, color);
+    });
+}*/
+
 enum class WindowFlags : uint8_t
 {
     TASKBAR = 1,
