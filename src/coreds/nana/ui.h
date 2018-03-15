@@ -409,6 +409,36 @@ struct MsgPanel : BgPanel
     }
 };
 
+namespace w$ {
+
+struct Label : BgPanel
+{
+    nana::label $;
+    
+    Label(nana::widget& owner, const char* layout, const char* field, const char* text = nullptr, bool format = false):
+        BgPanel(owner, layout),
+        $(*this)
+    {
+        place[field] << $;
+        
+        if (format)
+            $.format(true);
+        if (text)
+            $.caption(text);
+        
+        place.collocate();
+    }
+    
+    nana::label& bg(const nana::color& color)
+    {
+        $.bgcolor(color);
+        bgcolor(color);
+        return $;
+    }
+};
+
+} // w$
+
 template <typename T, typename W>
 struct List : Panel
 {
