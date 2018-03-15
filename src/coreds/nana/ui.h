@@ -67,6 +67,17 @@ inline void visible(nana::widget& w, bool on)
     nana::API::show_window(w.handle(), on);
 }
 
+inline void border_top(nana::paint::graphics& graph, nana::color color)
+{
+    /*
+    nana::rectangle r(graph.size());
+    graph.line_begin(r.x, r.y);
+    graph.line_to({ r.right() - 1, r.y }, color);
+    */
+    graph.line_begin(0, 0);
+    graph.line_to({ static_cast<int>(graph.size().width) - 1, 0 }, color);
+}
+
 enum class WindowFlags : uint8_t
 {
     TASKBAR = 1,
