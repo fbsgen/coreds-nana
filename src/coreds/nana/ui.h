@@ -415,15 +415,20 @@ struct Label : BgPanel
 {
     nana::label $;
     
-    Label(nana::widget& owner, const char* layout, const char* field, const char* text = nullptr, bool format = false):
+    Label(nana::widget& owner,
+            const std::string& text,
+            const nana::paint::font& font,
+            const char* layout, const char* field = "_",
+            bool format = false):
         BgPanel(owner, layout),
         $(*this)
     {
         place[field] << $;
         
+        $.typeface(font);
         if (format)
             $.format(true);
-        if (text)
+        if (!text.empty())
             $.caption(text);
         
         place.collocate();
