@@ -129,12 +129,12 @@ inline uint8_t operator& (uint8_t a, WindowFlags b)
     return a & static_cast<uint8_t>(b);
 }
 
-struct Form;
-Form* root{ nullptr };
+struct RootForm;
+RootForm* root{ nullptr };
 
-struct Form : nana::form
+struct RootForm : nana::form
 {
-    Form(nana::rectangle rect, uint8_t flags = uint8_t(WindowFlags::DEFAULT), unsigned bg = 0xFFFFFF): nana::form(rect,
+    RootForm(nana::rectangle rect, uint8_t flags = uint8_t(WindowFlags::DEFAULT), unsigned bg = 0xFFFFFF): nana::form(rect,
         nana::appearance(
             0 != (flags & WindowFlags::DECORATION),
             0 != (flags & WindowFlags::TASKBAR),
