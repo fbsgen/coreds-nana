@@ -266,14 +266,11 @@ struct DeferredPanel : nana::panel<false>
     {
         
     }
-    
 protected:
     void _m_complete_creation() override
     {
         place.bind(*this);
         place.div(layout);
-        
-        //transparent(true);
     }
 };
 
@@ -347,6 +344,23 @@ struct BgPanel : nana::panel<true>
             bgcolor(nana::color_rgb(bg));
         if (fg)
             fgcolor(nana::color_rgb(fg));
+    }
+};
+
+struct DeferredBgPanel : nana::panel<true>
+{
+    const char* const layout;
+    nana::place place;
+    
+    DeferredBgPanel(const char* layout) : nana::panel<true>(), layout(layout)
+    {
+        
+    }
+protected:
+    void _m_complete_creation() override
+    {
+        place.bind(*this);
+        place.div(layout);
     }
 };
 
@@ -433,12 +447,45 @@ struct Label : BgPanel
         
         place.collocate();
     }
-    
     nana::label& bg(const nana::color& color)
     {
         $.bgcolor(color);
         bgcolor(color);
         return $;
+    }
+};
+
+struct DeferredLabel : DeferredBgPanel
+{
+    const nana::paint::font& font;
+    const char* const field;
+    nana::label $;
+    
+    DeferredLabel(
+            const nana::paint::font& font,
+            const char* layout, const char* field = "_"):
+        DeferredBgPanel(layout),
+        font(font),
+        field(field)
+    {
+        
+    }
+    nana::label& bg(const nana::color& color)
+    {
+        $.bgcolor(color);
+        bgcolor(color);
+        return $;
+    }
+protected:
+    void _m_complete_creation() override
+    {
+        DeferredBgPanel::_m_complete_creation();
+        
+        $.create(handle());
+        $.typeface(font);
+        
+        place[field] << $;
+        place.collocate();
     }
 };
 
