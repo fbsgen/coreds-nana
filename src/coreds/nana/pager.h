@@ -53,9 +53,9 @@ public:
         return array.size();
     }
     
-    void populate(int idx, T* pojo)
+    void populate(int idx, T* pojo, int64_t ts)
     {
-        array[idx]->update(pojo);
+        array[idx]->update(pojo, ts);
     }
     
     bool trySelect(int idx)
