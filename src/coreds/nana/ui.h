@@ -384,7 +384,7 @@ struct MsgPanel : BgPanel
     MsgPanel(nana::widget& owner, const MsgColors& colors) : BgPanel(owner,
         "margin=[1,2,1,3]"
         "<msg_ margin=[1,0,0,0]>"
-        "<close_ weight=20>"
+        "<close_ weight=18>"
     ),  colors(colors)
     {
         auto listener = [this](nana::label::command cmd, const std::string& target) {
