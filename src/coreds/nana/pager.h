@@ -109,16 +109,10 @@ public:
                 store.pageTo(0);
                 break;
             case 5:
-                if (0 == (i = store.getPage()))
-                    store.fetch(store.isDesc());
-                else
-                    store.pageTo(i - 1);
+                store.prevOrLoad();
                 break;
             case 6:
-                if (store.getPageCount() == (i = store.getPage()))
-                    store.fetch(!store.isDesc());
-                else
-                    store.pageTo(i + 1);
+                store.nextOrLoad();
                 break;
             case 7:
                 store.pageTo(store.getPageCount());
@@ -172,18 +166,14 @@ public:
             case nana::keyboard::os_arrow_left:
                 if (arg.ctrl)
                     store.pageTo(0);
-                else if (0 == store.getPage())
-                    store.fetch(store.isDesc());
                 else
-                    store.pageTo(store.getPage() - 1);
+                    store.prevOrLoad();
                 break;
             case nana::keyboard::os_arrow_right:
                 if (arg.ctrl)
                     store.pageTo(store.getPageCount());
-                else if (store.getPageCount() == store.getPage())
-                    store.fetch(!store.isDesc());
                 else
-                    store.pageTo(store.getPage() + 1);
+                    store.nextOrLoad();
                 break;
             case nana::keyboard::space:
                 if (arg.ctrl)
