@@ -576,22 +576,22 @@ const char* const label22 = "margin=[8,5,0,5]<_>";
 const char* const label24 = "margin=[9,5,0,5]<_>";
 #endif
 
-inline const char* $label(int size)
+inline const char* $label(int size, int* flex_height)
 {
     switch (size)
     {
-        case 8: return label8;
-        case 9: return label9;
-        case 10: return label10;
-        case 11: return label11;
-        case 12: return label12;
-        case 14: return label14;
-        case 16: return label16;
-        case 18: return label18;
-        case 20: return label20;
-        case 22: return label22;
-        case 24: return label24;
-        default: return label10;
+        case 8: if (flex_height) *flex_height += h8; return label8;
+        case 9: if (flex_height) *flex_height += h9; return label9;
+        case 10: if (flex_height) *flex_height += h10; return label10;
+        case 11: if (flex_height) *flex_height += h11; return label11;
+        case 12: if (flex_height) *flex_height += h12; return label12;
+        case 14: if (flex_height) *flex_height += h14; return label14;
+        case 16: if (flex_height) *flex_height += h16; return label16;
+        case 18: if (flex_height) *flex_height += h18; return label18;
+        case 20: if (flex_height) *flex_height += h20; return label20;
+        case 22: if (flex_height) *flex_height += h22; return label22;
+        case 24: if (flex_height) *flex_height += h24; return label24;
+        default: if (flex_height) *flex_height += h10; return label10;
     }
 }
 
@@ -599,11 +599,11 @@ struct Label : BgPanel
 {
     nana::label $;
     
-    Label(nana::widget& owner,
+    Label(nana::widget& owner, int* flex_height,
             const std::string& text,
             const nana::paint::font& font,
             bool format = false):
-        BgPanel(owner, $label((int)font.size())),
+        BgPanel(owner, $label((int)font.size(), flex_height)),
         $(*this)
     {
         place["_"] << $;
@@ -629,8 +629,8 @@ struct DeferredLabel : DeferredBgPanel
     const nana::paint::font& font;
     nana::label $;
     
-    DeferredLabel(const nana::paint::font& font):
-        DeferredBgPanel($label((int)font.size())),
+    DeferredLabel(int* flex_height, const nana::paint::font& font):
+        DeferredBgPanel($label((int)font.size(), flex_height)),
         font(font)
     {
         
