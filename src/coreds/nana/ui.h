@@ -86,6 +86,19 @@ inline void border_bottom(nana::paint::graphics& graph, const nana::color& color
     graph.line_to({ static_cast<int>(graph.width()), y }, color);
 }
 
+/*inline void border_bottom_n(nana::paint::graphics& graph, const nana::color& color, int n)
+{
+    auto x = static_cast<int>(graph.width());
+    auto y = static_cast<int>(graph.height()) - 1;
+    do
+    {
+        graph.line_begin(0, y);
+        graph.line_to({ x, y }, color);
+        y--;
+    }
+    while (0 < --n);
+}*/
+
 inline void border_left(nana::paint::graphics& graph, const nana::color& color)
 {
     graph.line_begin(0, 0);
