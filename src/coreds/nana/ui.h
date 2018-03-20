@@ -6,6 +6,7 @@
 #include <nana/gui/widgets/label.hpp>
 #include <nana/gui/widgets/panel.hpp>
 #include <nana/gui/widgets/picture.hpp>
+#include <nana/gui/widgets/textbox.hpp>
 
 namespace ui {
 
@@ -134,7 +135,9 @@ RootForm* root{ nullptr };
 
 struct RootForm : nana::form
 {
-    RootForm(nana::rectangle rect, uint8_t flags = uint8_t(WindowFlags::DEFAULT), unsigned bg = 0xFFFFFF): nana::form(rect,
+    RootForm(nana::rectangle rect,
+            uint8_t flags = uint8_t(WindowFlags::DEFAULT),
+            const nana::color& bg = nana::colors::white): nana::form(rect,
         nana::appearance(
             0 != (flags & WindowFlags::DECORATION),
             0 != (flags & WindowFlags::TASKBAR),
@@ -147,7 +150,7 @@ struct RootForm : nana::form
     )
     {
         root = this;
-        bgcolor(nana::color_rgb(bg));
+        bgcolor(bg);
         events().unload([](const nana::arg_unload& arg) {
             nana::API::exit();
         });
@@ -161,7 +164,7 @@ struct SubForm : nana::form
             const std::string& title = "",
             bool modal = true,
             uint8_t flags = uint8_t(WindowFlags::DECORATION),
-            unsigned bg = 0xFFFFFF): nana::form(*ui::root, rect,
+            const nana::color& bg = nana::colors::white): nana::form(*ui::root, rect,
         nana::appearance(
             0 != (flags & WindowFlags::DECORATION),
             0 != (flags & WindowFlags::TASKBAR),
@@ -173,8 +176,9 @@ struct SubForm : nana::form
         )
     ), modal(modal)
     {
-        caption(title);
-        bgcolor(nana::color_rgb(bg));
+        bgcolor(bg);
+        if (!title.empty())
+            caption(title);
         events().unload([this](const nana::arg_unload& arg) {
             arg.cancel = true;
             if (this->modal)
@@ -194,6 +198,13 @@ struct SubForm : nana::form
         show();
         if (modal)
             nana::API::window_enabled(*root, false);
+    }
+    
+    void resizeY(int y)
+    {
+        auto sz = size();
+        sz.height += y;
+        size(sz);
     }
 };
 
@@ -423,7 +434,166 @@ struct MsgPanel : BgPanel
     }
 };
 
+namespace fonts {
+
+const nana::paint::font r8("", 8); // max ph: 16
+const nana::paint::font r9("", 9); // max ph: 18
+const nana::paint::font r10("", 10); // max ph: 22
+const nana::paint::font r11("", 11); // max ph: 24
+const nana::paint::font r12("", 12); // max ph: 27
+const nana::paint::font r14("", 14); // max ph: 32
+const nana::paint::font r16("", 16); // max ph: 36
+const nana::paint::font r18("", 18); // max ph: 41
+const nana::paint::font r20("", 20); // max ph: 46
+const nana::paint::font r22("", 22); // max ph: 51
+const nana::paint::font r24("", 24); // max ph: 56
+
+} // fonts
+
 namespace w$ {
+
+const int
+    h8 = 16,
+    h9 = 18,
+    h10 = 22,
+    h11 = 24,
+    h12 = 27,
+    h14 = 32,
+    h16 = 36,
+    h18 = 41,
+    h20 = 46,
+    h22 = 51,
+    h24 = 56;
+
+#ifdef WIN32
+const char* const input8 = "margin=[0,5,1,5]<_>";
+const char* const input9 = input8;
+const char* const input10 = input8;
+const char* const input11 = input8;
+const char* const input12 = input8;
+const char* const input14 = input8;
+const char* const input16 = input8;
+const char* const input18 = input8;
+const char* const input20 = input8;
+const char* const input22 = input8;
+const char* const input24 = input8;
+#else
+const char* const input8 = "margin=[1,5,1,5]<_>";
+const char* const input9 = input8;
+const char* const input10 = "margin=[2,5,1,5]<_>";
+const char* const input11 = input10;
+const char* const input12 = "margin=[3,5,1,5]<_>";
+const char* const input14 = "margin=[4,5,1,5]<_>";
+const char* const input16 = "margin=[5,5,1,5]<_>";
+const char* const input18 = "margin=[6,5,1,5]<_>";
+const char* const input20 = "margin=[7,5,1,5]<_>";
+const char* const input22 = "margin=[8,5,1,5]<_>";
+const char* const input24 = "margin=[9,5,1,5]<_>";
+#endif
+
+inline const char* $input(int size, int* flex_height)
+{
+    switch (size)
+    {
+        case 8: if (flex_height) *flex_height += h8; return input8;
+        case 9: if (flex_height) *flex_height += h9; return input9;
+        case 10: if (flex_height) *flex_height += h10; return input10;
+        case 11: if (flex_height) *flex_height += h11; return input11;
+        case 12: if (flex_height) *flex_height += h12; return input12;
+        case 14: if (flex_height) *flex_height += h14; return input14;
+        case 16: if (flex_height) *flex_height += h16; return input16;
+        case 18: if (flex_height) *flex_height += h18; return input18;
+        case 20: if (flex_height) *flex_height += h20; return input20;
+        case 22: if (flex_height) *flex_height += h22; return input22;
+        case 24: if (flex_height) *flex_height += h24; return input24;
+        default: if (flex_height) *flex_height += h10; return input10;
+    }
+}
+
+struct Input : BgPanel
+{
+    nana::textbox $;
+    
+    Input(nana::widget& owner, int* flex_height,
+            const std::string& placeholder,
+            const nana::paint::font& font,
+            const nana::color* bottom_color = nullptr,
+            bool multi_lines = false,
+            bool borderless = true):
+        BgPanel(owner, $input((int)font.size(), flex_height)),
+        $(*this)
+    {
+        place["_"] << $;
+        
+        $.multi_lines(multi_lines);
+        $.borderless(borderless);
+        if (bottom_color)
+        {
+            nana::API::effects_edge_nimbus($, nana::effects::edge_nimbus::none);
+            nana::drawing dw(*this);
+            dw.draw([bottom_color](nana::paint::graphics& graph) {
+                border_bottom(graph, *bottom_color);
+            });
+        }
+        
+        $.typeface(font);
+        if (!placeholder.empty())
+            $.tip_string(placeholder);
+        
+        place.collocate();
+    }
+    nana::textbox& bg(const nana::color& color)
+    {
+        $.bgcolor(color);
+        bgcolor(color);
+        return $;
+    }
+};
+
+#ifdef WIN32
+const char* const label8 = "margin=[0,5]<_>";
+const char* const label9 = label8;
+const char* const label10 = label8;
+const char* const label11 = label8;
+const char* const label12 = label8;
+const char* const label14 = label8;
+const char* const label16 = label8;
+const char* const label18 = label8;
+const char* const label20 = label8;
+const char* const label22 = label8;
+const char* const label24 = label8;
+#else
+const char* const label8 = "margin=[1,5,0,5]<_>";
+const char* const label9 = label8;
+const char* const label10 = "margin=[2,5,0,5]<_>";
+const char* const label11 = label10;
+const char* const label12 = "margin=[3,5,0,5]<_>";
+const char* const label14 = "margin=[4,5,0,5]<_>";
+const char* const label16 = "margin=[5,5,0,5]<_>";
+const char* const label18 = "margin=[6,5,0,5]<_>";
+const char* const label20 = "margin=[7,5,0,5]<_>";
+const char* const label22 = "margin=[8,5,0,5]<_>";
+const char* const label24 = "margin=[9,5,0,5]<_>";
+#endif
+
+inline const char* $label(int size)
+{
+    switch (size)
+    {
+        case 8: return label8;
+        case 9: return label9;
+        case 10: return label10;
+        case 11: return label11;
+        case 12: return label12;
+        case 14: return label14;
+        case 16: return label16;
+        case 18: return label18;
+        case 20: return label20;
+        case 22: return label22;
+        case 24: return label24;
+        default: return label10;
+    }
+}
 
 struct Label : BgPanel
 {
@@ -432,12 +602,11 @@ struct Label : BgPanel
     Label(nana::widget& owner,
             const std::string& text,
             const nana::paint::font& font,
-            const char* layout, const char* field = "_",
             bool format = false):
-        BgPanel(owner, layout),
+        BgPanel(owner, $label((int)font.size())),
         $(*this)
     {
-        place[field] << $;
+        place["_"] << $;
         
         $.typeface(font);
         if (format)
@@ -458,15 +627,11 @@ struct Label : BgPanel
 struct DeferredLabel : DeferredBgPanel
 {
     const nana::paint::font& font;
-    const char* const field;
     nana::label $;
     
-    DeferredLabel(
-            const nana::paint::font& font,
-            const char* layout, const char* field = "_"):
-        DeferredBgPanel(layout),
-        font(font),
-        field(field)
+    DeferredLabel(const nana::paint::font& font):
+        DeferredBgPanel($label((int)font.size())),
+        font(font)
     {
         
     }
@@ -484,7 +649,7 @@ protected:
         $.create(handle());
         $.typeface(font);
         
-        place[field] << $;
+        place["_"] << $;
         place.collocate();
     }
 };
