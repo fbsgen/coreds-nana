@@ -466,7 +466,7 @@ const int
     h24 = 56;
 
 #ifdef WIN32
-const char* const input8 = "margin=[0,5,1,5]<_>";
+const char* const input8 = "margin=[0,1,1,1]<_>";
 const char* const input9 = input8;
 const char* const input10 = input8;
 const char* const input11 = input8;
@@ -478,17 +478,17 @@ const char* const input20 = input8;
 const char* const input22 = input8;
 const char* const input24 = input8;
 #else
-const char* const input8 = "margin=[1,5,1,5]<_>";
+const char* const input8 = "margin=[1,1,1,1]<_>";
 const char* const input9 = input8;
-const char* const input10 = "margin=[2,5,1,5]<_>";
+const char* const input10 = "margin=[2,1,1,1]<_>";
 const char* const input11 = input10;
-const char* const input12 = "margin=[3,5,1,5]<_>";
-const char* const input14 = "margin=[4,5,1,5]<_>";
-const char* const input16 = "margin=[5,5,1,5]<_>";
-const char* const input18 = "margin=[6,5,1,5]<_>";
-const char* const input20 = "margin=[7,5,1,5]<_>";
-const char* const input22 = "margin=[8,5,1,5]<_>";
-const char* const input24 = "margin=[9,5,1,5]<_>";
+const char* const input12 = "margin=[3,1,1,1]<_>";
+const char* const input14 = "margin=[4,1,1,1]<_>";
+const char* const input16 = "margin=[5,1,1,1]<_>";
+const char* const input18 = "margin=[6,1,1,1]<_>";
+const char* const input20 = "margin=[7,1,1,1]<_>";
+const char* const input22 = "margin=[8,1,1,1]<_>";
+const char* const input24 = "margin=[9,1,1,1]<_>";
 #endif
 
 inline const char* $input(int size, int* flex_height)
