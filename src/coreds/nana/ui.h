@@ -491,27 +491,27 @@ const char* const input22 = "margin=[8,1,1,1]<_>";
 const char* const input24 = "margin=[9,1,1,1]<_>";
 #endif
 
-inline const char* $input(int size, int* flex_height)
-{
-    switch (size)
-    {
-        case 8: if (flex_height) *flex_height += h8; return input8;
-        case 9: if (flex_height) *flex_height += h9; return input9;
-        case 10: if (flex_height) *flex_height += h10; return input10;
-        case 11: if (flex_height) *flex_height += h11; return input11;
-        case 12: if (flex_height) *flex_height += h12; return input12;
-        case 14: if (flex_height) *flex_height += h14; return input14;
-        case 16: if (flex_height) *flex_height += h16; return input16;
-        case 18: if (flex_height) *flex_height += h18; return input18;
-        case 20: if (flex_height) *flex_height += h20; return input20;
-        case 22: if (flex_height) *flex_height += h22; return input22;
-        case 24: if (flex_height) *flex_height += h24; return input24;
-        default: if (flex_height) *flex_height += h10; return input10;
-    }
-}
-
 struct Input : BgPanel
 {
+    static const char* $layout(int size, int* flex_height)
+    {
+        switch (size)
+        {
+            case 8: if (flex_height) *flex_height += h8; return input8;
+            case 9: if (flex_height) *flex_height += h9; return input9;
+            case 10: if (flex_height) *flex_height += h10; return input10;
+            case 11: if (flex_height) *flex_height += h11; return input11;
+            case 12: if (flex_height) *flex_height += h12; return input12;
+            case 14: if (flex_height) *flex_height += h14; return input14;
+            case 16: if (flex_height) *flex_height += h16; return input16;
+            case 18: if (flex_height) *flex_height += h18; return input18;
+            case 20: if (flex_height) *flex_height += h20; return input20;
+            case 22: if (flex_height) *flex_height += h22; return input22;
+            case 24: if (flex_height) *flex_height += h24; return input24;
+            default: if (flex_height) *flex_height += h10; return input10;
+        }
+    }
+    
     nana::textbox $;
     
     Input(nana::widget& owner, int* flex_height,
@@ -520,7 +520,7 @@ struct Input : BgPanel
             const nana::color* bottom_color = nullptr,
             bool multi_lines = false,
             bool borderless = true):
-        BgPanel(owner, $input((int)font.size(), flex_height)),
+        BgPanel(owner, $layout((int)font.size(), flex_height)),
         $(*this)
     {
         place["_"] << $;
@@ -576,34 +576,34 @@ const char* const label22 = "margin=[8,5,0,5]<_>";
 const char* const label24 = "margin=[9,5,0,5]<_>";
 #endif
 
-inline const char* $label(int size, int* flex_height)
-{
-    switch (size)
-    {
-        case 8: if (flex_height) *flex_height += h8; return label8;
-        case 9: if (flex_height) *flex_height += h9; return label9;
-        case 10: if (flex_height) *flex_height += h10; return label10;
-        case 11: if (flex_height) *flex_height += h11; return label11;
-        case 12: if (flex_height) *flex_height += h12; return label12;
-        case 14: if (flex_height) *flex_height += h14; return label14;
-        case 16: if (flex_height) *flex_height += h16; return label16;
-        case 18: if (flex_height) *flex_height += h18; return label18;
-        case 20: if (flex_height) *flex_height += h20; return label20;
-        case 22: if (flex_height) *flex_height += h22; return label22;
-        case 24: if (flex_height) *flex_height += h24; return label24;
-        default: if (flex_height) *flex_height += h10; return label10;
-    }
-}
-
 struct Label : BgPanel
 {
+    static const char* $layout(int size, int* flex_height)
+    {
+        switch (size)
+        {
+            case 8: if (flex_height) *flex_height += h8; return label8;
+            case 9: if (flex_height) *flex_height += h9; return label9;
+            case 10: if (flex_height) *flex_height += h10; return label10;
+            case 11: if (flex_height) *flex_height += h11; return label11;
+            case 12: if (flex_height) *flex_height += h12; return label12;
+            case 14: if (flex_height) *flex_height += h14; return label14;
+            case 16: if (flex_height) *flex_height += h16; return label16;
+            case 18: if (flex_height) *flex_height += h18; return label18;
+            case 20: if (flex_height) *flex_height += h20; return label20;
+            case 22: if (flex_height) *flex_height += h22; return label22;
+            case 24: if (flex_height) *flex_height += h24; return label24;
+            default: if (flex_height) *flex_height += h10; return label10;
+        }
+    }
+    
     nana::label $;
     
     Label(nana::widget& owner, int* flex_height,
             const std::string& text,
             const nana::paint::font& font,
             bool format = false):
-        BgPanel(owner, $label((int)font.size(), flex_height)),
+        BgPanel(owner, $layout((int)font.size(), flex_height)),
         $(*this)
     {
         place["_"] << $;
@@ -630,7 +630,7 @@ struct DeferredLabel : DeferredBgPanel
     nana::label $;
     
     DeferredLabel(int* flex_height, const nana::paint::font& font):
-        DeferredBgPanel($label((int)font.size(), flex_height)),
+        DeferredBgPanel(Label::$layout((int)font.size(), flex_height)),
         font(font)
     {
         
