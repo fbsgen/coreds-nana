@@ -20,6 +20,7 @@ struct Pager : ui::Panel
         std::bind(&Pager::onLabelEvent, this, std::placeholders::_1, std::placeholders::_2)
     };
 protected:
+    virtual void selectForUpdate(int idx) = 0;
     virtual void beforePopulate() = 0;
     virtual void afterPopulate(int selectedIdx) = 0;
 private:
@@ -186,7 +187,9 @@ public:
                     store.nextOrLoad();
                 break;
             case nana::keyboard::space:
-                if (arg.ctrl)
+                if (arg.ctrl && arg.shift)
+                    selectForUpdate(idx);
+                else if (arg.ctrl)
                     store.fetchUpdate();
                 else if (arg.shift)
                     store.toggleDesc();

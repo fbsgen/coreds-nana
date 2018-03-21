@@ -170,7 +170,7 @@ struct RootForm : nana::form
     }
 };
 
-struct SubForm : protected nana::form
+struct SubForm : nana::form
 {
     const bool modal;
     SubForm(nana::rectangle rect,
@@ -200,9 +200,11 @@ struct SubForm : protected nana::form
                 root->focus();
             }
             hide();
+            onClose();
         });
     }
 protected:
+    virtual void onClose() {}
     void resizeY(int y)
     {
         auto sz = size();
