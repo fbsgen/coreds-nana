@@ -36,6 +36,11 @@ public:
         
     }
     
+    int getSelectedIdx()
+    {
+        return selected_idx;
+    }
+    
     void collocate(int pageSize = 10)
     {
         for (int i = 0; i < pageSize; i++)
@@ -51,6 +56,11 @@ public:
     int size()
     {
         return array.size();
+    }
+    
+    W* item(int idx)
+    {
+        return array[idx];
     }
     
     void populate(int idx, T* pojo, int64_t ts)
@@ -84,7 +94,7 @@ public:
         return true;
     }
     
-    void select(int idx)
+    virtual void select(int idx)
     {
         if (trySelect(idx))
             store.select(idx);
