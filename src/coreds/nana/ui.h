@@ -170,7 +170,7 @@ struct RootForm : nana::form
     }
 };
 
-struct SubForm : nana::form
+struct SubForm : protected nana::form
 {
     const bool modal;
     SubForm(nana::rectangle rect,
@@ -202,7 +202,13 @@ struct SubForm : nana::form
             hide();
         });
     }
-    
+protected:
+    void resizeY(int y)
+    {
+        auto sz = size();
+        sz.height += y;
+        size(sz);
+    }
     void popTo(nana::point pos)
     {
         nana::API::move_window(*this, pos);
@@ -210,19 +216,11 @@ struct SubForm : nana::form
         if (modal)
             nana::API::window_enabled(*root, false);
     }
-    
-    void popTo(nana::window target, int y = 0)
+    void popTo(nana::window target, int y)
     {
         auto pos = nana::API::window_position(target);
         pos.y += y;
         popTo(pos);
-    }
-    
-    void resizeY(int y)
-    {
-        auto sz = size();
-        sz.height += y;
-        size(sz);
     }
 };
 
