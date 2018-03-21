@@ -203,14 +203,19 @@ struct SubForm : nana::form
         });
     }
     
-    void popTo(nana::window target, int y = 0)
+    void popTo(nana::point pos)
     {
-        auto pos = nana::API::window_position(target);
-        pos.y += y;
         nana::API::move_window(*this, pos);
         show();
         if (modal)
             nana::API::window_enabled(*root, false);
+    }
+    
+    void popTo(nana::window target, int y = 0)
+    {
+        auto pos = nana::API::window_position(target);
+        pos.y += y;
+        popTo(pos);
     }
     
     void resizeY(int y)
