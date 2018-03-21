@@ -148,6 +148,9 @@ RootForm* root{ nullptr };
 
 struct RootForm : nana::form
 {
+private:
+    bool closed{ false };
+public:
     RootForm(nana::rectangle rect,
             uint8_t flags = uint8_t(WindowFlags::DEFAULT),
             const nana::color& bg = nana::colors::white): nana::form(rect,
@@ -164,9 +167,13 @@ struct RootForm : nana::form
     {
         root = this;
         bgcolor(bg);
-        events().unload([](const nana::arg_unload& arg) {
-            nana::API::exit();
+        events().unload([this](const nana::arg_unload& arg) {
+            closed = true;
         });
+    }
+    bool isClosed()
+    {
+        return closed;
     }
 };
 
@@ -193,6 +200,9 @@ struct SubForm : nana::form
         if (!title.empty())
             caption(title);
         events().unload([this](const nana::arg_unload& arg) {
+            if (ui::root->isClosed())
+                return;
+            
             arg.cancel = true;
             if (this->modal)
             {
