@@ -215,11 +215,12 @@ struct SubForm : nana::form
     }
 protected:
     virtual void onClose() {}
-    void resizeY(int y)
+    int resizeY(int y)
     {
         auto sz = size();
         sz.height += y;
         size(sz);
+        return sz.height;
     }
     void popTo(nana::point pos)
     {
