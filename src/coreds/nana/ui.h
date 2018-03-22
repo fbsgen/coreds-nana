@@ -762,6 +762,13 @@ public:
         
         on_.events().click($toggle);
         off_.events().click($toggle);
+        nana::API::tabstop(on_);
+        nana::API::tabstop(off_);
+        nana::API::dev::enable_space_click(on_, true);
+        nana::API::dev::enable_space_click(off_, true);
+        //nana::API::effects_edge_nimbus(on_, nana::effects::edge_nimbus::active);
+        //nana::API::effects_edge_nimbus(off_, nana::effects::edge_nimbus::active);
+        
         if (!clickable_icon_only)
         {
             $.events().click($toggle);
