@@ -696,14 +696,14 @@ protected:
 
 #ifdef WIN32
 const char* const checkbox10 = "margin=[0,1]<on_ weight=16><off_ weight=16><weight=10><_>";
-const char* const checkbox11 = checkbox10;
-const char* const checkbox12 = checkbox10;
-const char* const checkbox14 = checkbox10;
-const char* const checkbox16 = checkbox10;
-const char* const checkbox18 = checkbox10;
-const char* const checkbox20 = checkbox10;
-const char* const checkbox22 = checkbox10;
-const char* const checkbox24 = checkbox10;
+const char* const checkbox11 = "margin=[0,1]<on_ margin=[2,0,0,0] weight=16><off_ margin=[2,0,0,0] weight=16><weight=10><_>";
+const char* const checkbox12 = "margin=[0,1]<on_ margin=[4,0,0,0] weight=16><off_ margin=[4,0,0,0] weight=16><weight=10><_>";
+const char* const checkbox14 = "margin=[0,1]<on_ margin=[7,0,0,0] weight=16><off_ margin=[7,0,0,0] weight=16><weight=10><_>";
+const char* const checkbox16 = "margin=[0,1]<on_ margin=[10,0,0,0] weight=16><off_ margin=[10,0,0,0] weight=16><weight=10><_>";
+const char* const checkbox18 = "margin=[0,1]<on_ margin=[13,0,0,0] weight=16><off_ margin=[13,0,0,0] weight=16><weight=10><_>";
+const char* const checkbox20 = "margin=[0,1]<on_ margin=[15,0,0,0] weight=16><off_ margin=[15,0,0,0] weight=16><weight=10><_>";
+const char* const checkbox22 = "margin=[0,1]<on_ margin=[18,0,0,0] weight=16><off_ margin=[18,0,0,0] weight=16><weight=10><_>";
+const char* const checkbox24 = "margin=[0,1]<on_ margin=[21,0,0,0] weight=16><off_ margin=[21,0,0,0] weight=16><weight=10><_>";
 #else
 const char* const checkbox10 = "margin=[0,1]<on_ weight=16><off_ weight=16><weight=10><_ margin=[1,0,0,0]>";
 const char* const checkbox11 = "margin=[0,1]<on_ margin=[2,0,0,0] weight=16><off_ margin=[2,0,0,0] weight=16><weight=10><_ margin=[2,0,0,0]>";
