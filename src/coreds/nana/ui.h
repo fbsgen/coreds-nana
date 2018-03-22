@@ -801,6 +801,11 @@ public:
     {
         return val;
     }
+    void value(bool value)
+    {
+        if (val != value)
+            update(value);
+    }
 };
 
 } // w$
