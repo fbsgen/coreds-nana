@@ -2,6 +2,9 @@
 
 #include <vector>
 #include <forward_list>
+
+#include <coreds/util.h>
+
 #include <nana/gui/wvl.hpp>
 #include <nana/gui/widgets/label.hpp>
 #include <nana/gui/widgets/panel.hpp>
@@ -314,7 +317,7 @@ protected:
     }
 };
 
-struct ToggleIcon : Panel
+struct ToggleIcon : Panel, coreds::HasState<bool>
 {
     Icon on_;
     Icon off_;
@@ -330,7 +333,7 @@ struct ToggleIcon : Panel
         place.field_display("off_", false);
     }
     
-    void update(bool on)
+    void update(bool on) override
     {
         place.field_display("on_", on);
         place.field_display("off_", !on);
@@ -338,7 +341,7 @@ struct ToggleIcon : Panel
     }
 };
 
-struct DeferredToggleIcon : DeferredPanel
+struct DeferredToggleIcon : DeferredPanel, coreds::HasState<bool>
 {
     DeferredIcon on_;
     DeferredIcon off_;
@@ -351,7 +354,7 @@ struct DeferredToggleIcon : DeferredPanel
         
     }
     
-    void update(bool on)
+    void update(bool on) override
     {
         place.field_display("on_", on);
         place.field_display("off_", !on);
@@ -404,7 +407,7 @@ protected:
     }
 };
 
-struct MsgPanel : BgPanel
+struct MsgPanel : BgPanel, coreds::HasState<const std::string&>
 {
     const MsgColors colors;
     nana::label msg_{ *this, "" };
@@ -439,7 +442,7 @@ struct MsgPanel : BgPanel
         hide();
     }
     
-    void update(const std::string& msg, Msg type = ui::Msg::$ERROR)
+    void update(const std::string& msg, Msg type)
     {
         msg_.caption(msg);
         
@@ -460,6 +463,14 @@ struct MsgPanel : BgPanel
         }
         
         show();
+    }
+    
+    void update(const std::string& msg) override
+    {
+        if (msg.empty())
+            hide();
+        else
+            update(msg, Msg::$ERROR);
     }
 };
 
@@ -493,6 +504,84 @@ const int
     h20 = 46,
     h22 = 51,
     h24 = 56;
+
+#ifdef WIN32
+const char* const checkbox8 = "margin=[0,5]<on_ weight=16><off_ weight=16><weight=10><_>";
+const char* const checkbox9 = checkbox8;
+const char* const checkbox10 = checkbox8;
+const char* const checkbox11 = checkbox8;
+const char* const checkbox12 = checkbox8;
+const char* const checkbox14 = checkbox8;
+const char* const checkbox16 = checkbox8;
+const char* const checkbox18 = checkbox8;
+const char* const checkbox20 = checkbox8;
+const char* const checkbox22 = checkbox8;
+const char* const checkbox24 = checkbox8;
+#else
+const char* const checkbox8 = "margin=[0,5]<on_ weight=16><off_ weight=16><weight=10><_ margin=[1,0,0,0]>";
+const char* const checkbox9 = checkbox8;
+const char* const checkbox10 = "margin=[0,5]<on_ weight=16><off_ weight=16><weight=10><_ margin=[2,0,0,0]>";
+const char* const checkbox11 = checkbox10;
+const char* const checkbox12 = "margin=[0,5]<on_ weight=16><off_ weight=16><weight=10><_ margin=[3,0,0,0]>";
+const char* const checkbox14 = "margin=[0,5]<on_ weight=16><off_ weight=16><weight=10><_ margin=[4,0,0,0]>";
+const char* const checkbox16 = "margin=[0,5]<on_ weight=16><off_ weight=16><weight=10><_ margin=[5,0,0,0]>";
+const char* const checkbox18 = "margin=[0,5]<on_ weight=16><off_ weight=16><weight=10><_ margin=[6,0,0,0]>";
+const char* const checkbox20 = "margin=[0,5]<on_ weight=16><off_ weight=16><weight=10><_ margin=[7,0,0,0]>";
+const char* const checkbox22 = "margin=[0,5]<on_ weight=16><off_ weight=16><weight=10><_ margin=[8,0,0,0]>";
+const char* const checkbox24 = "margin=[0,5]<on_ weight=16><off_ weight=16><weight=10><_ margin=[9,0,0,0]>";
+#endif
+
+struct Checkbox : BgPanel, coreds::HasState<bool>
+{
+    static const char* $layout(int size, int* flex_height)
+    {
+        switch (size)
+        {
+            case 8: if (flex_height) *flex_height += h8; return checkbox8;
+            case 9: if (flex_height) *flex_height += h9; return checkbox9;
+            case 10: if (flex_height) *flex_height += h10; return checkbox10;
+            case 11: if (flex_height) *flex_height += h11; return checkbox11;
+            case 12: if (flex_height) *flex_height += h12; return checkbox12;
+            case 14: if (flex_height) *flex_height += h14; return checkbox14;
+            case 16: if (flex_height) *flex_height += h16; return checkbox16;
+            case 18: if (flex_height) *flex_height += h18; return checkbox18;
+            case 20: if (flex_height) *flex_height += h20; return checkbox20;
+            case 22: if (flex_height) *flex_height += h22; return checkbox22;
+            case 24: if (flex_height) *flex_height += h24; return checkbox24;
+            default: if (flex_height) *flex_height += h10; return checkbox10;
+        }
+    }
+    
+    Icon on_;
+    Icon off_;
+    nana::label $;
+    
+    Checkbox(nana::widget& owner, int* flex_height,
+            const std::string& text, const nana::paint::font& font,
+            nana::paint::image icon_on, nana::paint::image icon_off, bool cursor_hand = true):
+        BgPanel(owner, $layout((int)font.size(), flex_height)),
+        on_(*this, icon_on, cursor_hand),
+        off_(*this, icon_off, cursor_hand)
+    {
+        place["on_"] << on_;
+        place["off_"] << off_;
+        place["_"] << $;
+        
+        $.typeface(font);
+        if (!text.empty())
+            $.caption(text);
+        
+        place.collocate();
+        place.field_display("off_", false);
+    }
+    
+    void update(bool on) override
+    {
+        place.field_display("on_", on);
+        place.field_display("off_", !on);
+        place.collocate();
+    }
+};
 
 #ifdef WIN32
 const char* const input8 = "margin=[0,1,1,1]<_>";
